@@ -1,21 +1,21 @@
 package com.example.sqlite;
 
+import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.content.Context;
 
 
 public class MySQLiteOpenHelper extends SQLiteOpenHelper {
-	
+
 	/**
 	 * @param context 呼び出しコンテキスト
 	 * @param name 利用DB名
 	 * @param factory カーソルファクトリー
 	 * @param version DBバージョン
 	 */
-	
+
 	public MySQLiteOpenHelper(Context context){
 		super(context,"20140021201762.sqlite3",null,1);
 	}
@@ -23,8 +23,8 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO 自動生成されたメソッド・スタブ
-		db.execSQL("CREATE TABLE IF NOT EXISTS " + 
-				"Hitokoto( id INTEGER PRIMARY KEY NOT NULL , pass TEXT)");
+		db.execSQL("CREATE TABLE IF NOT EXISTS " +
+				"user( id INTEGER PRIMARY KEY TEXT NOT NULL , pass TEXT)");
 
 	}
 
@@ -36,11 +36,10 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
 	}
 
-	public void insertHitokoto(SQLiteDatabase db, String inputid,
-			String inputpass) {
-		// TODO 自動生成されたメソッド・スタブ
-		String sqlstr = "INSERT INTO Hitokoto (id) values('" + inputid + "');";
-		String sqlstr2 = "INSERT INTO Hitokoto (pass) values('" + inputpass + "');";
+	public void insertHitokoto(SQLiteDatabase db,String inputid, String inputpass){
+
+		String sqlstr = " insert into user (id,pass) values(' " + inputid + " '); ";
+		String sqlstr2 = " insert into user (pass) values('"+inputpass+"');";
 			try{
 				//トランザクション開始
 				db.beginTransaction();
@@ -49,15 +48,15 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 				//トランザクション成功
 				db.setTransactionSuccessful();
 			}catch(SQLException e){
-				Log.e("ERROR",e.toString());
+				Log.e("ERROR", e.toString());
 			}finally{
 				//トランザクション終了
 				db.endTransaction();
 			}
 		return;
-		
 	}
-	
+
+
 
 
 }

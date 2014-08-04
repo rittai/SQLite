@@ -1,22 +1,16 @@
 package com.example.sqlite;
 
 import android.app.Activity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 public class MainActivity extends Activity implements View.OnClickListener{
-	
+
 	SQLiteDatabase sdb = null;
 	MySQLiteOpenHelper helper = null;
 
@@ -28,12 +22,22 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		//ll.setOrientation(LinearLayout.HORIZONTAL);
 		//setContentView(ll);
 	}
-	
+
 	@Override
 	protected void onResume(){
 		super.onResume();
 		Button btnENTRY = (Button)findViewById(R.id.button2);
 		btnENTRY.setOnClickListener(this);
+
+		if(sdb == null){
+			helper = new MySQLiteOpenHelper(getApplicationContext());
+		}
+		try{
+			sdb = helper.getWritableDatabase();
+		}catch(SQLiteException e){
+			//異常終了
+			return;
+		}
 	}
 
 	@Override
@@ -44,10 +48,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			//エディットテキストからの入力内容を取り出す
 			EditText id = (EditText)findViewById(R.id.editText1);
 			EditText pass = (EditText)findViewById(R.id.editText2);
-			
+
 			String inputid = id.getText().toString();
 			String inputpass = pass.getText().toString();
-			
+
 			//inputがnullでない、かつ、空でない場合のみ、if文内を実行
 			if(inputid != null && ! inputid.isEmpty()){
 				//if(inputpass != null && ! inputpass.isEmpty()){
@@ -59,22 +63,22 @@ public class MainActivity extends Activity implements View.OnClickListener{
 				id.setText("");
 				pass.setText("");
 				break;
-			}
+
 			/*
 		case R.id.button3:
 			String query_select = "SELECT * FROM Hitokoto";
-			
+
 			Cursor cursor = sdb.rawQuery(query_select,null);
 			startManagingCursor(cursor);
-			
+
 			String result_str = "";
-			
+
 			while(cursor.moveToNext()){
 				int index_id = cursor.getColumnIndex("id");
 				int index_pass = cursor.getColumnIndex("pass");
 				int id2 = cursor.getInt(index_id);
 				int pass2 = cursor.getInt(index_pass);
-				
+
 				result_str  +="ID：" +id2+"名前：" + pass2 + "¥n";
 			}
 			//内容表示用のTextView
@@ -86,5 +90,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		}
 	}
 
-	
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+}
+
 
